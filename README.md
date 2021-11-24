@@ -23,4 +23,8 @@ Create a ModuleScript called "DCProxy" in ServerScriptService with the code belo
 ### Create a server-sided script
 Your script needs to be server-sided, so you will have to create the script in the Workspace or the ServerScriptService.
 
+<<<<<<< HEAD
 All the functions can be found inside the ModuleScript
+=======
+All the functions can be found inside the ModuleScript
+>>>>>>> d29d9aae65fcb3528c2022643657f18b466d5c08

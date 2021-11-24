@@ -1,0 +1,29 @@
+{
+  "name": "rbx2dc-proxy",
+  "version": "0.0.1",
+  "description": "Roblox to Discord proxy as it got banned",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dinat13/rbx2dc-proxy.git"
+  },
+  "keywords": [
+    "roblox",
+    "discord",
+    "proxy",
+    "webhooks"
+  ],
+  "author": "dinat13",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dinat13/rbx2dc-proxy/issues"
+  },
+  "homepage": "https://github.com/dinat13/rbx2dc-proxy#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "needle": "^3.0.0"
+  }
+}

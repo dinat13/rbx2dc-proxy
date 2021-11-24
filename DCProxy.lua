@@ -6,7 +6,7 @@
     Start your script by 
     "local DCProxy = require(game.ServerScriptService.DCProxy)
     
-    DCProxy.setup('YOUR_WEBHOOK_LINK', select between true and false)"
+    DCProxy.setup('YOUR_WEBHOOK_LINK', 'YOUR_PROXY_LINK', select between true and false)"
 
     More examples available on GitHub (https://github.com/dinat13/rbx2dc-proxy/)
 
@@ -100,17 +100,19 @@ DCProxy.newEmbed = function(title: string, desc: string, url: string, timestamp:
     return embedArray = { ['title'] = title, desc, ['url'] = url, ['timestamp'] = timestamp, ['color'] = color, ['footer'] = { ['text'] = footerText, ['icon_url'] = footerIcon }, ['image'] = image, ['thumbnail'] = thumbnail, ['author'] = { ['name'] = authorText, ['url'] = authorUrl, ['icon_url'] = authorIcon }, ['fields'] = fields };
 end;
 
-DCProxy.setup = function(WebhookLink: string, Responses: boolean)
-    local link;
-    if WebhookLink ~= '' and WebhookLink ~= ' ' and WebhookLink then
-        link = WebhookLink;
+DCProxy.setup = function(WebhookLink: string, ProxyLink: string, Responses: boolean)
+    local wLink;
+    local pLink;
+    if WebhookLink ~= '' and WebhookLink ~= ' ' and WebhookLink and ProxyLink ~= '' and ProxyLink ~= ' ' and ProxyLink then
+        wLink = WebhookLink;
+        pLink = ProxyLink;
 
         -- POST a webhook message
         function SendWebhookMessage(Message: string)
             if Message == '' or Message == ' ' or not Message then
                 warn('Rbx2DC-proxy: Please enter a message!');
             else
-                local Data = HttpService:JSONEncode({ ['data'] = { ['content'] = Message }, ['method'] = 'POST' });
+                local Data = HttpService:JSONEncode({ ['data'] = { ['content'] = Message }, ['method'] = 'POST', ['webhook'] = wLink });
 
                 HttpService:PostAsync(link, Data);
             end;
@@ -122,11 +124,11 @@ DCProxy.setup = function(WebhookLink: string, Responses: boolean)
                 if Embed then
                     if Embed[1] and type(Embed[1]) == 'string' then
                         if Embed and Message and Message ~= '' and Message ~= ' ' then
-                            local Data = HttpService:JSONEncode({ ['data'] = { ['content'] = Message, ['embeds'] = Embed }, ['method'] = 'POST' });
+                            local Data = HttpService:JSONEncode({ ['data'] = { ['content'] = Message, ['embeds'] = Embed }, ['method'] = 'POST', ['webhook'] = wLink });
 
                             HttpService:PostAsync(link, Data);
                         else
-                            local Data = HttpService:JSONEncode({ ['data'] = { ['embeds'] = Embed }, ['method'] = 'POST' });
+                            local Data = HttpService:JSONEncode({ ['data'] = { ['embeds'] = Embed }, ['method'] = 'POST', ['webhook'] = wLink });
 
                             HttpService:PostAsync(link, Data);
                         end;
@@ -144,7 +146,7 @@ DCProxy.setup = function(WebhookLink: string, Responses: boolean)
         -- GET webhook message
         function DCProxy:GetWebhookMessage(MessageId: string)
             if MessageId then
-                local Data = HttpService:GetAsync(link..'/'..MessageId);
+                local Data = HttpService:GetAsync(link..'/'..MessageId, false, { ['webhook'] = wLink..'/'..MessageId });
                 Data = HttpService:JSONDecode(Data);
 
                 return Data;
@@ -156,7 +158,7 @@ DCProxy.setup = function(WebhookLink: string, Responses: boolean)
         -- PATCH webhook message
         function DCProxy:EditWebhookMessage(MessageId: string, Message: string)
             if MessageId and Message then
-                local Data = HttpService:JSONEncode({ ["data"] = { ['content'] = Message }, ['method'] = 'PATCH' });
+                local Data = HttpService:JSONEncode({ ["data"] = { ['content'] = Message }, ['method'] = 'PATCH', ['webhook'] = wLink..'/'..MessageId });
 
                 HttpService:PostAsync(link..'/'..MessageId, Data);
             else
@@ -167,7 +169,7 @@ DCProxy.setup = function(WebhookLink: string, Responses: boolean)
         -- DELETE webhook message
         function DCProxy:DeleteWebhookMessage(MessageId: string)
             if MessageId then
-                local Data = HttpService:JSONEncode({ ['method'] = 'DELETE' });
+                local Data = HttpService:JSONEncode({ ['method'] = 'DELETE', ['webhook'] = wLink..'/'..MessageId });
                 
                 HttpService:PostAsync(link..'/'..MessageId, Data);
             else
